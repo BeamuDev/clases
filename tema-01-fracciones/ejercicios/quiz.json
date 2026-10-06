@@ -1,0 +1,29 @@
+{
+  "titulo": "Comprueba lo que sabes",
+  "preguntas": [
+    {
+      "pregunta": "En la fracción 5/8, ¿qué indica el 8?",
+      "opciones": ["Las partes que tomamos", "Las partes iguales en que dividimos la unidad", "El resultado de dividir", "Nada, es decorativo"],
+      "correcta": 1,
+      "explicacion": "El denominador (abajo) indica en cuántas partes iguales se divide la unidad."
+    },
+    {
+      "pregunta": "¿Cuál de estas fracciones es impropia?",
+      "opciones": ["3/7", "4/4", "9/5", "1/2"],
+      "correcta": 2,
+      "explicacion": "Es impropia cuando el numerador es mayor que el denominador: 9 > 5."
+    },
+    {
+      "pregunta": "¿Qué fracción es equivalente a 2/3?",
+      "opciones": ["4/6", "3/4", "2/6", "5/6"],
+      "correcta": 0,
+      "explicacion": "Multiplicando arriba y abajo por 2: 2·2 / 3·2 = 4/6."
+    },
+    {
+      "pregunta": "¿Cuál es mayor: 3/5 o 3/8?",
+      "opciones": ["3/8", "3/5", "Son iguales", "No se puede saber"],
+      "correcta": 1,
+      "explicacion": "Con el mismo numerador, es mayor la de menor denominador: los trozos de quintos son más grandes que los de octavos."
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+# Copia este archivo en cada repo de clase.
+# Cuando subes cambios a la clase, avisa al repo de la web para que se reconstruya.
+#
+# Necesita dos cosas en este repo (Settings → Secrets and variables → Actions):
+#   - Variable  WEB_REPO          → p. ej. "tu-usuario/aula-web"
+#   - Secreto   WEB_DISPATCH_TOKEN → token con permiso "Contents: read and write" sobre el repo de la web
+name: Avisar a la web
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  avisar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pedir a la web que se reconstruya
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.WEB_DISPATCH_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ vars.WEB_REPO }}/dispatches \
+            -d '{"event_type":"clase-actualizada","client_payload":{"repo":"${{ github.repository }}"}}'

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visualizador de fracciones</title>
+<style>
+  :root { --acento: #d9572b; --tinta: #23201c; --suave: #f4e3c1; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, sans-serif; color: var(--tinta); background: #fffaf2;
+         display: grid; place-items: center; min-height: 100vh; padding: 16px; }
+  .panel { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; max-width: 720px; width: 100%; }
+  @media (max-width: 560px) { .panel { grid-template-columns: 1fr; } }
+  svg { width: 100%; max-width: 280px; justify-self: center; }
+  .frac { font-family: Georgia, serif; font-size: 64px; text-align: center; line-height: 1; }
+  .frac hr { border: 0; border-top: 4px solid var(--tinta); width: 90px; margin: 8px auto; }
+  label { display: block; font-weight: 600; margin-top: 16px; }
+  input[type=range] { width: 100%; accent-color: var(--acento); }
+  .info { margin-top: 16px; padding: 12px; background: var(--suave); border-radius: 10px; font-size: 15px; }
+</style>
+</head>
+<body>
+<div class="panel">
+  <svg id="pizza" viewBox="-110 -110 220 220"></svg>
+  <div>
+    <div class="frac"><span id="n">3</span><hr><span id="d">4</span></div>
+    <label>Numerador (partes que tomas): <span id="nv">3</span></label>
+    <input id="num" type="range" min="0" max="12" value="3">
+    <label>Denominador (partes iguales): <span id="dv">4</span></label>
+    <input id="den" type="range" min="1" max="12" value="4">
+    <div class="info" id="info"></div>
+  </div>
+</div>
+<script>
+  const pizza = document.getElementById('pizza');
+  const num = document.getElementById('num'), den = document.getElementById('den');
+  function sector(i, total, lleno) {
+    if (total === 1) return `<circle r="100" fill="${lleno ? '#d9572b' : '#f4e3c1'}" stroke="#b5762f" stroke-width="3"/>`;
+    const a0 = (i / total) * 2 * Math.PI - Math.PI / 2, a1 = ((i + 1) / total) * 2 * Math.PI - Math.PI / 2;
+    const p = a => [100 * Math.cos(a), 100 * Math.sin(a)];
+    const [x0, y0] = p(a0), [x1, y1] = p(a1), grande = a1 - a0 > Math.PI ? 1 : 0;
+    return `<path d="M0 0 L${x0} ${y0} A100 100 0 ${grande} 1 ${x1} ${y1} Z" fill="${lleno ? '#d9572b' : '#f4e3c1'}" stroke="#b5762f" stroke-width="3"/>`;
+  }
+  function pintar() {
+    const n = +num.value, d = +den.value;
+    document.getElementById('n').textContent = n; document.getElementById('nv').textContent = n;
+    document.getElementById('d').textContent = d; document.getElementById('dv').textContent = d;
+    // Para fracciones impropias dibujamos solo la última pizza y lo indicamos en el texto
+    const enteras = Math.floor(n / d), resto = n % d;
+    let s = '';
+    for (let i = 0; i < d; i++) s += sector(i, d, n >= d && resto === 0 ? true : i < resto);
+    pizza.innerHTML = s;
+    let tipo = n < d ? 'propia (menor que 1)' : n === d ? 'igual a la unidad' : 'impropia (mayor que 1)';
+    let txt = `Has dividido la unidad en <b>${d}</b> partes y tomas <b>${n}</b>. Es una fracción <b>${tipo}</b>.`;
+    if (n > d) txt += ` Equivale a <b>${enteras}</b> pizza(s) entera(s)${resto ? ` y <b>${resto}/${d}</b> más (el dibujo muestra ese resto)` : ''}.`;
+    txt += ` Valor decimal: <b>${(n / d).toLocaleString('es-ES', { maximumFractionDigits: 3 })}</b>.`;
+    document.getElementById('info').innerHTML = txt;
+  }
+  num.oninput = den.oninput = pintar; pintar();
+</script>
+</body>
+</html>
